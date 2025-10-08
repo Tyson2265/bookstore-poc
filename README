@@ -22,6 +22,78 @@ Docker Desktop installed and running
 Node.js (only if you want to run locally without Docker)
 
 ---
+---
+
+## 🧠 Problem-Solving & Design Decisions
+
+This section explains the reasoning behind the implementation, challenges faced, and potential future improvements. It demonstrates critical thinking and problem-solving approaches.
+
+### 1. Architectural Choices
+
+- **Node.js + Express + TypeScript**:  
+  Chosen for speed of development, familiarity, and strong ecosystem. TypeScript ensures type safety, reducing runtime errors in a PoC and making future maintenance easier.
+- **Sequelize ORM**:  
+  Abstracts database interactions, supports PostgreSQL, and allows easy migrations. Reduces boilerplate SQL code while still allowing raw queries if needed.
+- **PostgreSQL**:  
+  Chosen for relational data (users, books, authors), strong consistency guarantees, and widespread support.
+- **JWT Authentication**:  
+  Stateless authentication allows API scalability and easy integration with microservices in the future.
+
+---
+
+### 2. Key Implementation Decisions
+
+- **Custom User Model with Pseudonym**:  
+  Required to differentiate between username and author pseudonym. The `pseudonym` allows authors to publish under a pen name while keeping the login system standard.
+- **Books Model**:  
+  Includes title, description, cover image URL, price, and author reference. Chose types that align with expected use (string for text, float for price, string URL for image).
+- **REST API Design**:  
+  Followed typical resource-based patterns (`/books`, `/users/me`) for clarity and future extension. Public vs authenticated endpoints were separated to enforce access control.
+- **Searchable List**:  
+  Implemented query parameters (`?title=...&author=...`) to allow filtering without adding a separate search endpoint.
+
+---
+
+### 3. Gotchas & Challenges
+
+- **Database Migrations**:  
+  Managing schema changes in Sequelize during development required `sync({ alter: true })` for PoC, but this may be replaced with proper migrations in production.
+- **Authentication**:  
+  JWTs require careful handling; in production, you would also implement refresh tokens, expiration checks, and possibly token revocation.
+- **Docker on Windows**:  
+  Volume permissions and path issues were observed when mounting local directories. Tested cross-platform compatibility to ensure CTO can run on any OS.
+
+---
+
+### 4. Future Improvements
+
+- **Pagination & Sorting**:  
+  Currently, `/books` returns all records; adding pagination, sorting, and advanced filtering would improve performance for large datasets.
+- **File Uploads for Covers**:  
+  Implement S3 or local storage for book cover images instead of relying on URLs.
+- **Soft Deletes & Audit Logging**:  
+  Track which books are unpublished or deleted for safety and reporting.
+- **Role-based Access Control (RBAC)**:  
+  Separate admin and author permissions to prevent unauthorized actions.
+- **API Documentation**:  
+  Use Swagger/OpenAPI to provide an interactive API reference for developers and clients.
+- **Testing**:  
+  Add full integration tests and CI/CD pipelines for continuous validation.
+
+---
+
+### 5. Reasoning Behind This Approach
+
+- **PoC Focus**:  
+  Prioritized core functionality (auth, book CRUD, user profile) while keeping the code modular and maintainable.
+- **Dockerization**:  
+  Ensures portability and consistent setup, allowing the CTO to run the PoC on any OS without dependency conflicts.
+- **TypeScript & Best Practices**:  
+  Makes the PoC robust and easier to extend to production, reducing the likelihood of runtime errors and enhancing developer experience.
+
+---
+
+This section demonstrates the thought process behind architectural, design, and implementation decisions, highlights potential pitfalls, and outlines a roadmap for production-ready improvements.
 
 ---
 
