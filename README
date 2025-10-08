@@ -31,7 +31,7 @@ Node.js (only if you want to run locally without Docker)
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Tyson2265/
+git clone https://github.com/Tyson2265/bookstore-poc
 
 
 
